@@ -1,0 +1,12 @@
+#board {
+  width: 20em;
+  height: 20em;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  border: 10px solid black;
+}
+
+.boardSquare{
+  border: 1px solid black;
+}
