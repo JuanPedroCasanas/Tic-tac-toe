@@ -31,8 +31,12 @@ function playerFactory(avatar, isActive) {
 }
 
 function makeGridClickable(players) {
+  let handleClick = (event)=>placeFigure(players, event.target);
   boardSquares.forEach((e) => {
-    e.addEventListener('click', () => { placeFigure(players, e) });
+    e.removeEventListener('click', handleClick);
+  })
+  boardSquares.forEach((e) => {
+    e.addEventListener('click', handleClick);
   })
 }
 
@@ -68,7 +72,7 @@ function checkWinConditions(player) {
     alert(`Player ${player.avatar} wins`);
     resetGame()
   } else if (turn === 9) {
-    console.log('draw');
+    alert('draw');
     resetGame()
   } else {
   }
@@ -81,9 +85,9 @@ function runGame() {
 
 function resetGame() {
   turn = 0;
-  boardSquares.forEach((e)=>e.textContent = '');
- }
-
+  boardSquares.forEach((e) => { e.textContent = '' })
+  //Remove event listeners should go here//
+}
 
 
 /*/
