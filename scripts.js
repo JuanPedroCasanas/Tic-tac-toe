@@ -71,12 +71,9 @@ function placeFigure(event) {
     event.target.textContent = activePlayer.avatar;
     players.forEach((e) => { e.toggleActiveness() });
     (players[1].type === 'computer') ? placeFigure() : () => { };
-  } else if (gameStatus != 'finished') {
-    checkWinConditions(players[0]);
-    if (gameStatus != 'finished') {
-      checkWinConditions(players[1]);
-    }
   }
+  checkWinConditions(players[0]);
+  checkWinConditions(players[1]);
 }
 
 
@@ -88,26 +85,28 @@ function decideAiPlacement() {
       case 'Easy':
         let randomCell = Math.floor((emptyCells.length) * Math.random());
         emptyCells[randomCell].textContent = 'O';
-        if (gameStatus != 'finished') {
-          checkWinConditions(players[0]);
-          if (gameStatus != 'finished') {
-            checkWinConditions(players[1]);
-          }
+        break;
+
+      case 'Medium':
+        let goodMoveChance = Math.floor(11 * Math.random());
+        if (goodMoveChance >= 5) {
+          let bestCell = pickBestMove(true, 0, emptyCells);
+          bestCell.textContent = 'O';
+        } else if (goodMoveChance < 5) {
+          let randomCell = Math.floor((emptyCells.length) * Math.random());
+          emptyCells[randomCell].textContent = 'O';
         }
+        goodMoveChance = Math.floor(11 * Math.random());
         break;
 
       case 'Hard':
         let bestCell = pickBestMove(true, 0, emptyCells);
         bestCell.textContent = 'O';
-        if (gameStatus != 'finished') {
-          checkWinConditions(players[0]);
-          if (gameStatus != 'finished') {
-            checkWinConditions(players[1]);
-          }
-        }
         break;
     }
   }
+  checkWinConditions(players[0]);
+  checkWinConditions(players[1]);
 }
 
 function pickBestMove(isMin, depth, emptyCells) {
@@ -152,33 +151,35 @@ function minimax(isMin, depth) {
 }
 
 function checkWinConditions(player, isAiPrediction) {
-  let emptyCells = checkEmptyCells();
-  let x = [];
-  boardSquares.forEach((e) => x.push(e.textContent));
-  if (x[0] + x[1] + x[2] === player.avatar + player.avatar + player.avatar ||
-    x[3] + x[4] + x[5] === player.avatar + player.avatar + player.avatar ||
-    x[6] + x[7] + x[8] === player.avatar + player.avatar + player.avatar ||
-    x[0] + x[3] + x[6] === player.avatar + player.avatar + player.avatar ||
-    x[1] + x[4] + x[7] === player.avatar + player.avatar + player.avatar ||
-    x[2] + x[5] + x[8] === player.avatar + player.avatar + player.avatar ||
-    x[0] + x[4] + x[8] === player.avatar + player.avatar + player.avatar ||
-    x[6] + x[4] + x[2] === player.avatar + player.avatar + player.avatar) {
-    let resultForMinimax = (player.strategy === 'max') ? 1 : -1;
-    if (!isAiPrediction) {
-      gameStatus = 'finished';
-      alert(`Player ${player.avatar} wins`);
-      resetGame(false);
+  if (gameStatus != 'finished') {
+    let emptyCells = checkEmptyCells();
+    let x = [];
+    boardSquares.forEach((e) => x.push(e.textContent));
+    if (x[0] + x[1] + x[2] === player.avatar + player.avatar + player.avatar ||
+      x[3] + x[4] + x[5] === player.avatar + player.avatar + player.avatar ||
+      x[6] + x[7] + x[8] === player.avatar + player.avatar + player.avatar ||
+      x[0] + x[3] + x[6] === player.avatar + player.avatar + player.avatar ||
+      x[1] + x[4] + x[7] === player.avatar + player.avatar + player.avatar ||
+      x[2] + x[5] + x[8] === player.avatar + player.avatar + player.avatar ||
+      x[0] + x[4] + x[8] === player.avatar + player.avatar + player.avatar ||
+      x[6] + x[4] + x[2] === player.avatar + player.avatar + player.avatar) {
+      let resultForMinimax = (player.strategy === 'max') ? 1 : -1;
+      if (!isAiPrediction) {
+        gameStatus = 'finished';
+        alert(`Player ${player.avatar} wins`);
+        resetGame(false);
+      }
+      return resultForMinimax;
+    } else if (emptyCells.length === 0) {
+      if (!isAiPrediction) {
+        gameStatus = 'finished';
+        alert(`Draw`);
+        resetGame(false);
+      }
+      return 0;
+    } else {
+      return null;
     }
-    return resultForMinimax;
-  } else if (emptyCells.length === 0) {
-    if (!isAiPrediction) {
-      gameStatus = 'finished';
-      alert(`Draw`);
-      resetGame(false);
-    }
-    return 0;
-  } else {
-    return null;
   }
 }
 
