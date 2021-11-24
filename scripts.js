@@ -3,11 +3,13 @@
     const gameOptions = (function () {
 /*/
 //cacheDOM//
+const board = document.getElementById('board');
 const modeSelect = document.getElementById('modeSelect');
 const difficultySelect = document.getElementById('difficultySelect');
 const playButton = document.getElementById('playButton');
 const resetButton = document.getElementById('resetButton');
 const boardSquares = Array.from(document.getElementsByClassName('boardSquare'));
+const resultDisplay = document.getElementById('resultDisplay');
 
 //TURN FLAGS => MAYBE IT DOESN'T GO HERE//
 let players;
@@ -38,13 +40,29 @@ function playerFactory(avatar, isActive, type = 'player', strategy = 'max') {
 function togglePlayBtn(state) {
   if (state) {
     playButton.removeEventListener('click', runGame);
+    playButton.classList.add('pressed');
+    resetButton.classList.add('hightlight');
   } else {
     playButton.addEventListener('click', runGame);
+    playButton.classList.remove('pressed');
+    resetButton.classList.remove('hightlight');
   }
 }
 
 function updateMode() {
   modeSelect.value = document.getElementById('modeSelect').value;
+  if (modeSelect.value === 'VS AI') {
+    difficultySelect.classList.remove('hidden');
+  } else if (modeSelect.value === 'VS Player') {
+    difficultySelect.classList.add('hidden');
+  }
+}
+
+function renderCellSelection(cell, avatar) {
+  console.log(avatar);
+  (avatar === 'O') ? cell.textContent = 'O' : cell.textContent = 'X';
+  (cell.textContent === 'O') ? cell.style.color = 'tomato' :
+    cell.style.color = 'rgb(80, 153, 72)';
 }
 
 function makeGridClickable() {
@@ -63,12 +81,12 @@ function checkEmptyCells() {
 function placeFigure(event) {
   let activePlayer = (players[0].isActive === true) ? players[0] : players[1];
   if (activePlayer.type === 'computer') {
-    decideAiPlacement();
+    decideAiPlacement(activePlayer);
     players.forEach((e) => { e.toggleActiveness() });
 
   } else if (event.target.textContent != '') {
   } else if (activePlayer.type === 'player') {
-    event.target.textContent = activePlayer.avatar;
+    renderCellSelection(event.target, activePlayer.avatar)
     players.forEach((e) => { e.toggleActiveness() });
     (players[1].type === 'computer') ? placeFigure() : () => { };
   }
@@ -77,31 +95,31 @@ function placeFigure(event) {
 }
 
 
-function decideAiPlacement() {
+function decideAiPlacement(activePlayer) {
   let emptyCells = checkEmptyCells();
   if (emptyCells.length != 0) {
 
     switch (difficultySelect.value) {
       case 'Easy':
         let randomCell = Math.floor((emptyCells.length) * Math.random());
-        emptyCells[randomCell].textContent = 'O';
+        renderCellSelection(emptyCells[randomCell], activePlayer.avatar)
         break;
 
       case 'Medium':
         let goodMoveChance = Math.floor(11 * Math.random());
         if (goodMoveChance >= 5) {
           let bestCell = pickBestMove(true, 0, emptyCells);
-          bestCell.textContent = 'O';
+          renderCellSelection(bestCell, activePlayer.avatar)
         } else if (goodMoveChance < 5) {
           let randomCell = Math.floor((emptyCells.length) * Math.random());
-          emptyCells[randomCell].textContent = 'O';
+          renderCellSelection(emptyCells[randomCell], activePlayer.avatar)
         }
         goodMoveChance = Math.floor(11 * Math.random());
         break;
 
       case 'Hard':
         let bestCell = pickBestMove(true, 0, emptyCells);
-        bestCell.textContent = 'O';
+        renderCellSelection(bestCell, activePlayer.avatar)
         break;
     }
   }
@@ -166,14 +184,14 @@ function checkWinConditions(player, isAiPrediction) {
       let resultForMinimax = (player.strategy === 'max') ? 1 : -1;
       if (!isAiPrediction) {
         gameStatus = 'finished';
-        alert(`Player ${player.avatar} wins`);
+        displayResults('Win', player);
         resetGame(false);
       }
       return resultForMinimax;
     } else if (emptyCells.length === 0) {
       if (!isAiPrediction) {
         gameStatus = 'finished';
-        alert(`Draw`);
+        displayResults('Draw', player);
         resetGame(false);
       }
       return 0;
@@ -183,7 +201,26 @@ function checkWinConditions(player, isAiPrediction) {
   }
 }
 
+function displayResults(result, player) {
+  board.classList.add('deactivatedBoard');
+  resetButton.classList.remove('pressed');
+  if (result === 'Win') {
+    (player.avatar === 'O') ? resultDisplay.style.color = 'tomato' :
+      resultDisplay.style.color = 'rgb(80, 153, 72)';
+    resultDisplay.textContent = `Player '${player.avatar}' Wins!`;
+    boardSquares.forEach((e) => {
+      (e.textContent === player.avatar) ?
+      e.classList.add('winner') : () => { };
+    });
+  } else {
+    resultDisplay.style.color = 'rgb(237, 213, 74)'
+    resultDisplay.textContent = `Draw.`;
+  }
+}
+
 function runGame() {
+  board.classList.remove('deactivatedBoard');
+  resetButton.classList.remove('pressed');
   gameStatus = 'ongoing';
   switch (modeSelect.value) {
     case 'VS Player':
@@ -206,7 +243,9 @@ function resetGame(type) {
     e.removeEventListener('click', placeFigure);
   })
   if (type === true) {
-    boardSquares.forEach((e) => { e.textContent = '' })
+    resetButton.classList.add('pressed')
+    boardSquares.forEach((e) => { e.textContent = ''; e.classList.remove('winner');});
+    resultDisplay.textContent = '';
     togglePlayBtn(false);
   } else {
   }
