@@ -246,6 +246,7 @@ function resetGame(type) {
     resetButton.classList.add('pressed')
     boardSquares.forEach((e) => { e.textContent = ''; e.classList.remove('winner');});
     resultDisplay.textContent = '';
+    board.classList.add('deactivatedBoard');
     togglePlayBtn(false);
   } else {
   }
