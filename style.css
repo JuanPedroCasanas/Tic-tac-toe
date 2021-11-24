@@ -312,7 +312,7 @@
   body{
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 4em 4.5em 1em 1fr;
+    grid-template-rows: 4em 4.5em 0.5em 1fr 1em;
     row-gap: 3em;
     justify-items: center;
     align-items: center;
@@ -412,8 +412,8 @@
     font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 1em;
     font-weight: 500;
-    width: 5em;
-    height: 3em;
+    width: 4em;
+    height: 2em;
     line-height: 20px;
     list-style: none;
     margin: 0;
