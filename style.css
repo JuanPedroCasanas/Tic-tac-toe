@@ -105,6 +105,9 @@
   }
 
   button, select{
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
     border: none;
     background-color: #EA4C89;
     border-radius: 8px;
@@ -118,21 +121,17 @@
     font-weight: 500;
     width: 5em;
     height: 3em;
-    line-height: 20px;
     list-style: none;
     margin: 0;
     outline: none;
-    padding: 2px 10px;
     position: relative;
     text-align: center;
     text-decoration: none;
     transition: color 100ms;
-    vertical-align: baseline;
   }
 
   select{
     background-color: #EA4C89;
-    padding: 2px 5px;
     width: 8em;
   }
 
@@ -253,6 +252,9 @@
   }
 
   button, select{
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
     border: none;
     background-color: #EA4C89;
     border-radius: 8px;
@@ -266,21 +268,17 @@
     font-weight: 500;
     width: 5em;
     height: 3em;
-    line-height: 20px;
     list-style: none;
     margin: 0;
     outline: none;
-    padding: 2px 10px;
     position: relative;
     text-align: center;
     text-decoration: none;
     transition: color 100ms;
-    vertical-align: baseline;
   }
 
   select{
     background-color: #EA4C89;
-    padding: 2px 5px;
     width: 6em;
   }
 
@@ -401,6 +399,9 @@
   }
 
   button, select{
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
     border: none;
     background-color: #EA4C89;
     border-radius: 8px;
@@ -414,21 +415,17 @@
     font-weight: 500;
     width: 4em;
     height: 2em;
-    line-height: 20px;
     list-style: none;
     margin: 0;
     outline: none;
-    padding: 2px 10px;
     position: relative;
     text-align: center;
     text-decoration: none;
     transition: color 100ms;
-    vertical-align: baseline;
   }
 
   select{
     background-color: #EA4C89;
-    padding: 2px 5px;
     width: 6em;
   }
 
