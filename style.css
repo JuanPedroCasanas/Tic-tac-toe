@@ -1,6 +1,6 @@
 @font-face {
   font-family: "boardFont";
-  src: url(/fonts/FredokaOne-Regular.ttf);
+  src: url(/Tic-tac-toe/fonts/FredokaOne-Regular.ttf);
 }
 
 @media (max-width: 640px) {
